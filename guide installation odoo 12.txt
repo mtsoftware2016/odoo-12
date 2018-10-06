@@ -1,7 +1,7 @@
 --MT Software --  
                                                   
 
-                                                             -- How to install Odoo 11 on Ubuntu 16.04 --
+                                                             -- How to install Odoo 12 on Ubuntu 16.04 --
 
 STEP 1
 sudo apt-get update
@@ -49,7 +49,7 @@ Odoo 11 Download from GitHub
 cd /opt/odoo
 sudo apt-get install git
 sudo su - odoo -s /bin/bash
-git clone https://www.github.com/odoo/odoo --depth 1 --branch 11.0 --single-branch
+git clone https://www.github.com/odoo/odoo --depth 1 --branch 12.0 --single-branch
 exit
 STEP 10
 Create Odoo Log File
@@ -97,3 +97,24 @@ cd /opt/odoo/odoo
 STEP 14
 Open browser on :
 http://localhost:8069
+
+STEP 15
+
+cd /usr/local/lib/
+sudo git clone https://github.com/sass/sassc.git --branch 3.4.2 --depth 1
+sudo git clone https://github.com/sass/libsass.git --branch 3.4-stable --depth 1
+sudo git clone https://github.com/sass/sass-spec.git --depth=1
+
+STEP 16
+echo 'SASS_LIBSASS_PATH="/usr/local/lib/libsass"' | sudo tee -a /etc/environment
+source /etc/environment
+
+STEP 17
+sudo make -C libsass
+
+STEP 18
+sudo make -C sassc
+sudo make -C sassc install
+
+STEP 19 
+Restart Odoo Server
