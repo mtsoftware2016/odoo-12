@@ -57,7 +57,7 @@ sudo mkdir /var/log/odoo
 sudo chown -R odoo:root /var/log/odoo
 STEP 11
 Edit Odoo configuration file
-sudo gedit/etc/odoo.conf
+sudo gedit /etc/odoo.conf
 
 #Copy this lines and change with users and password 
 ------------------------------------
