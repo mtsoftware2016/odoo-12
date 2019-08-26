@@ -1,0 +1,114 @@
+--MT Software --  
+                                                  
+
+                                                            			 -- How to install Odoo 12 on Ubuntu 19.04 --
+
+sudo apt update && sudo apt-get dist-upgrade -y
+
+sudo apt install git python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools python3-img2pdf node-less
+
+
+sudo apt-get install libpcap-dev libpq-dev
+
+sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev tcl8.6-dev tk8.6-dev python-tk
+
+
+** Install WkhtmlToPdf **
+
+
+wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+tar xvJf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz 
+sudo cp wkhtmltox/bin/wkhtmlto* /usr/bin/
+
+** Create User Odoo 12 **
+
+sudo useradd -m -d /opt/odoo12 -U -r -s /bin/bash odoo12
+
+sudo apt-get install postgresql
+
+sudo su - postgres -c "createuser -s odoo12"
+
+
+
+
+sudo su - odoo12
+
+git clone https://www.github.com/odoo/odoo --depth 1 --branch 12.0 /opt/odoo12/odoo
+
+
+
+cd /opt/odoo12
+
+** Python requirements **
+python3 -m venv odoo-venv
+source odoo-venv/bin/activate
+pip3 install --upgrade setuptools
+pip3 install fpdf img2pdf wheel gdata
+pip3 install -r odoo/requirements.txt
+
+pip3 install Babel decorator docutils ebaysdk feedparser gevent greenlet html2text Jinja2 lxml Mako MarkupSafe mock num2words ofxparse passlib Pillow psutil psycopg2 pydot pyparsing PyPDF2 pyserial python-dateutil python-openid pytz pyusb PyYAML qrcode reportlab requests six suds-jurko vatnumber vobject Werkzeug XlsxWriter xlwt xlrd gdata
+
+
+deactivate
+
+
+exit
+
+
+
+su odoo12
+mkdir /opt/odoo12/custom-addons
+exit
+sudo nano /etc/odoo12.conf
+----------------------------------
+
+[options]
+; This is the password that allows database operations:
+admin_passwd = my_admin_passwd
+db_host = False
+db_port = False
+db_user = odoo12
+db_password = False
+addons_path = /opt/odoo12/odoo/addons,/opt/odoo12/custom-addons
+
+
+----------------------------------
+
+
+sudo nano /etc/systemd/system/odoo12.service
+
+
+[Unit]
+Description=Odoo12
+Requires=postgresql.service
+After=network.target postgresql.service
+[Service]
+Type=simple
+SyslogIdentifier=odoo12
+PermissionsStartOnly=true
+User=odoo12
+Group=odoo12
+ExecStart=/opt/odoo12/odoo-venv/bin/python3 /opt/odoo12/odoo/odoo-bin -c /etc/odoo12.conf
+StandardOutput=journal+console
+[Install]
+WantedBy=multi-user.target
+
+
+---------------------------------
+
+
+
+sudo systemctl daemon-reload
+
+
+sudo systemctl start odoo12
+
+sudo systemctl enable odoo12
+
+sudo systemctl status odoo12
+
+
+
+
+
+
